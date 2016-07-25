@@ -1,4 +1,3 @@
-require "byebug"
 require "footballer/photo/version"
 require "footballer/photo/parser"
 
