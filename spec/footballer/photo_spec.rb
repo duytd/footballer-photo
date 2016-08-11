@@ -7,19 +7,37 @@ describe Footballer::Photo do
 
   it "parse a correct photo using full name if player found" do
     parser = Footballer::Photo::Parser.new
-    result = parser.parse_photo "Wayne", "Rooney"
+    result = parser.parse_player_photo "Wayne", "Rooney"
     expect(result).to eq("//cdn.soccerwiki.org/images/player/1139.jpg")
-  end
-
-  it "parse a correct photo using partial name if player found" do
-    parser = Footballer::Photo::Parser.new
-    result = parser.parse_photo "C", "Ronaldo", true
-    expect(result).to eq("//cdn.soccerwiki.org/images/player/1131.jpg")
   end
 
   it "return nil if no player found" do
     parser = Footballer::Photo::Parser.new
-    result = parser.parse_photo "Duy", "Trinh"
+    result = parser.parse_player_photo "Duy", "Trinh"
+    expect(result).to eq(nil)
+  end
+
+  it "return a correct club logo if club name (in normal form) found" do
+    parser = Footballer::Photo::Parser.new
+    result = parser.parse_club_logo "Manchester United"
+    expect(result).to eq("//smimgs.com/images/logos/clubs/49.jpg")
+  end
+
+  it "return a correct club logo if club name (in lowercase) found" do
+    parser = Footballer::Photo::Parser.new
+    result = parser.parse_club_logo "manchester united"
+    expect(result).to eq("//smimgs.com/images/logos/clubs/49.jpg")
+  end
+
+  it "return a correct club logo if club name (in uppercase) found" do
+    parser = Footballer::Photo::Parser.new
+    result = parser.parse_club_logo "MANCHESTER UNITED"
+    expect(result).to eq("//smimgs.com/images/logos/clubs/49.jpg")
+  end
+
+  it "return nil if no club found" do
+    parser = Footballer::Photo::Parser.new
+    result = parser.parse_club_logo "Duy Trinh"
     expect(result).to eq(nil)
   end
 end
