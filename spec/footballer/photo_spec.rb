@@ -35,6 +35,12 @@ describe Footballer::Photo do
     expect(result).to eq("//smimgs.com/images/logos/clubs/49.jpg")
   end
 
+  it "return a correct club logo if club name (with latin characters) found" do
+    parser = Footballer::Photo::Parser.new
+    result = parser.parse_club_logo "Sochaux-Montbéliard"
+    expect(result).to eq("//smimgs.com/images/logos/clubs/343.jpg")
+  end
+
   it "return nil if no club found" do
     parser = Footballer::Photo::Parser.new
     result = parser.parse_club_logo "Duy Trinh"
