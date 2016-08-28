@@ -14,11 +14,8 @@ module Footballer
         player = nil
 
         if first_name && last_name
-          normalized_first_name = normalize_name first_name
-          normalized_last_name = normalize_name last_name
-
-          f_matcher = "@f=\"#{translate_latin_character(normalized_first_name).downcase.capitalize}\""
-          s_matcher = "@s=\"#{translate_latin_character(normalized_last_name).upcase}\""
+          f_matcher = "contains(translate(@f, 'ÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜÝŸØÇŞÑáàâäéèêëíìîïóòôöúùûüýÿøçşñ','AAAAEEEEIIIIOOOOUUUUYYOCSNaaaaeeeeiiiioooouuuuyyocsn'), \"#{translate_latin_character(first_name).downcase.capitalize}\")"
+          s_matcher = "contains(translate(@s, 'ÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜÝŸØÇŞÑáàâäéèêëíìîïóòôöúùûüýÿøçşñ','AAAAEEEEIIIIOOOOUUUUYYOCSNaaaaeeeeiiiioooouuuuyyocsn'), \"#{translate_latin_character(last_name).upcase}\")"
 
           player = data.xpath("//P[#{f_matcher} and #{s_matcher}]").first
         end
