@@ -7,6 +7,10 @@ module Footballer
     class Parser
       PLAYER_PATH = File.join File.dirname(__FILE__), "data", "playerbasicdata.xml"
       CLUB_PATH = File.join File.dirname(__FILE__), "data", "clubdata.xml"
+      MAPPING = [
+        "áàâäéèêëíìîïóòôöúùûüýÿøčçćšşñž",
+        "aaaaeeeeiiiioooouuuuyyocccssnz"
+      ]
 
       def parse_player_photo first_name, last_name, partial=false
         data = File.open(PLAYER_PATH) { |f| Nokogiri::XML(f) }
@@ -14,8 +18,9 @@ module Footballer
         player = nil
 
         if first_name && last_name
-          f_matcher = "contains(translate(@f, 'ÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜÝŸØÇŞÑáàâäéèêëíìîïóòôöúùûüýÿøçşñ','AAAAEEEEIIIIOOOOUUUUYYOCSNaaaaeeeeiiiioooouuuuyyocsn'), \"#{translate_latin_character(first_name).downcase.capitalize}\")"
-          s_matcher = "contains(translate(@s, 'ÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜÝŸØÇŞÑáàâäéèêëíìîïóòôöúùûüýÿøçşñ','AAAAEEEEIIIIOOOOUUUUYYOCSNaaaaeeeeiiiioooouuuuyyocsn'), \"#{translate_latin_character(last_name).upcase}\")"
+          name =  "#{first_name} #{last_name}"
+          f_matcher = "contains(\"#{translate_latin_character(name).capitalize}\", translate(@f, '#{MAPPING[0].upcase}#{MAPPING[0]}','#{MAPPING[1].upcase}#{MAPPING[1]}'))"
+          s_matcher = "contains(\"#{translate_latin_character(name).upcase}\", translate(@s, '#{MAPPING[0].upcase}#{MAPPING[0]}','#{MAPPING[1].upcase}#{MAPPING[1]}'))"
 
           player = data.xpath("//P[#{f_matcher} and #{s_matcher}]").first
         end
@@ -36,7 +41,7 @@ module Footballer
         if name
           normalized_name = normalize_name name
 
-          n_matcher = "contains(translate(@n, 'áàâäéèêëíìîïóòôöúùûüýÿøçşñ','aaaaeeeeiiiioooouuuuyyocsn'), \"#{translate_latin_character(normalized_name)}\")"
+          n_matcher = "contains(translate(@n, '#{MAPPING[0]}','#{MAPPING[1]}'), \"#{translate_latin_character(normalized_name)}\")"
           club = data.xpath("//C[#{n_matcher}]").first
         end
 

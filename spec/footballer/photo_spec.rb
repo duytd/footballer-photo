@@ -7,8 +7,8 @@ describe Footballer::Photo do
 
   it "parse a correct photo using full name if player found" do
     parser = Footballer::Photo::Parser.new
-    result = parser.parse_player_photo "Wayne", "Rooney"
-    expect(result).to eq("//cdn.soccerwiki.org/images/player/1139.jpg")
+    result = parser.parse_player_photo "Lionel", "Messi"
+    expect(result).to eq("//cdn.soccerwiki.org/images/player/2772.jpg")
   end
 
   it "return nil if no player found" do
